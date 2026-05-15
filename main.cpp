@@ -1,79 +1,54 @@
-#include <iostream>
-#include <array>
-#include <chrono>
-#include <thread>
-
-#include <SFML/Graphics.hpp>
-//////////////////////////////////////////////////////////////////////
 /// NOTE: this include is needed for environment-specific fixes     //
 /// You can remove this include and the call from main              //
 /// if you have tested on all environments, and it works without it //
-#include <filesystem>
-
-#include "env_fixes.h"                                              //
-//////////////////////////////////////////////////////////////////////
+#include <SFML/Graphics.hpp>
 
 
-//////////////////////////////////////////////////////////////////////
-/// This class is used to test that the memory leak checks work as expected even when using a GUI
-class SomeClass {
-public:
-    explicit SomeClass(int) {}
-};
 
-SomeClass *getC() {
-    return new SomeClass{2};
-}
-//////////////////////////////////////////////////////////////////////
-class ResourceManager {
-public:
-    enum ResourceType {
-        FONT
-    };
-    static std::string getPathTo(const ResourceType type, const std::string &resource) {
-        // the logic here should be more complicated, when building with CLion the executable is located in a directory
-        // named cmake-build-debug and that's how we get these paths
-        auto path = std::filesystem::current_path().parent_path().append("resources");
-        switch (type) {
-            case FONT:
-                path.append("fonts");
-                break;
-        }
-        return path.append(resource).string();
-    }
-};
+#include "env_fixes.h"
+#include <gameEngine.h> // Core game logic
+#include <resman.h>     // Resource manager things
 
-class FontManager {
-public:
-    FontManager(const FontManager&) = delete;
-    FontManager& operator=(const FontManager&) = delete;
 
-    [[nodiscard]] const sf::Font& font() const {
-        return _font;
-    }
+#include <chrono>
+#include <thread>
 
-    static FontManager& sharedInstance() {
-        static FontManager instance;
-        return instance;
-    }
 
+
+
+/*
+class AlphabetStatus : public BaseEntity{
 private:
-    sf::Font _font;
-    FontManager() {
-        std::cout<<_font.loadFromFile(ResourceManager::getPathTo(ResourceManager::ResourceType::FONT, "Roboto-Medium.ttf"));
+    std::map<char, std::unique_ptr<LetterTile> > letterTiles;
+public:
+    AlphabetStatus(sf::Vector2f startPos) {
+        float size = 25.f;
+        float padding = 5.f;
+
+        LetterTile::setGlobalTileSize(size);
+
+        for (int i = 0; i < 26; ++i) {
+            char c = 'A' + i;
+
+            float x = startPos.x + (i%13) * (size + padding);
+            float y = startPos.y + (i/13) * (size + padding);
+
+            letterTiles[c] = std::make_unique<LetterTile>(sf::Vector2f(x,y),c);
+        }
+        LetterTile::setGlobalTileSize(60.f);
     }
-};
+
+    void updateLetter(char c, LetterTile::TileStatus newStatus)
+};*/
+
 
 int main() {
-    ////////////////////////////////////////////////////////////////////////
     /// NOTE: this function call is needed for environment-specific fixes //
-    init_threads();                                                       //
-    ////////////////////////////////////////////////////////////////////////
-    ///
-    std::cout << "Hello, world!\n";
-    std::array<int, 100> v{};
-    int nr;
-    std::cout << "Introduceți nr: ";
+    init_threads();
+    //2.6.1
+    //std::cout<<SFML_VERSION_MAJOR<<'.'<<SFML_VERSION_MINOR<<'.'<<SFML_VERSION_PATCH<<std::endl;
+
+
     /////////////////////////////////////////////////////////////////////////
     /// Observație: dacă aveți nevoie să citiți date de intrare de la tastatură,
     /// dați exemple de date de intrare folosind fișierul tastatura.txt
@@ -94,87 +69,55 @@ int main() {
     /// program care merg (și să le evitați pe cele care nu merg).
     ///
     /////////////////////////////////////////////////////////////////////////
-    std::cin >> nr;
-    /////////////////////////////////////////////////////////////////////////
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "v[" << i << "] = ";
-        std::cin >> v[i];
-    }
-    std::cout << "\n\n";
-    std::cout << "Am citit de la tastatură " << nr << " elemente:\n";
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "- " << v[i] << "\n";
-    }
-    ///////////////////////////////////////////////////////////////////////////
-    /// Pentru date citite din fișier, NU folosiți tastatura.txt. Creați-vă voi
-    /// alt fișier propriu cu ce alt nume doriți.
-    /// Exemplu:
-    /// std::ifstream fis("date.txt");
-    /// for(int i = 0; i < nr2; ++i)
-    ///     fis >> v2[i];
-    ///
 
-    SomeClass *c = getC();
-    std::cout << c << "\n";
-    delete c;
 
-    sf::RenderWindow window;
-    ///////////////////////////////////////////////////////////////////////////
-    /// NOTE: sync with env variable APP_WINDOW from .github/workflows/cmake.yml:31
-    window.create(sf::VideoMode({800, 700}), "My Window", sf::Style::Default);
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    ///////////////////////////////////////////////////////////////////////////
-    /// NOTE: mandatory use one of vsync or FPS limit (not both)            ///
-    /// This is needed so we do not burn the GPU                            ///
-    window.setVerticalSyncEnabled(true);                                    ///
-    /// window.setFramerateLimit(60);                                       ///
-    ///////////////////////////////////////////////////////////////////////////
-    ///
     sf::Text text;
     FontManager::sharedInstance();
+
+
     text.setFont(FontManager::sharedInstance().font());
     text.setString("Hello World!");
     text.setCharacterSize(34);
-    text.setFillColor(sf::Color::Red);
-    text.setStyle(sf::Text::Regular);
-    sf::CircleShape circle(100.0f);
-    circle.setFillColor(sf::Color::Red);
-    circle.setPosition(350, 250);
+    text.setFillColor(sf::Color(83,141,78)); //moss green
+    text.setStyle(sf::Text::Italic);
+
     text.setPosition(15, 15);
 
-    while(window.isOpen()) {
-        bool shouldExit = false;
-        sf::Event e{};
-        while(window.pollEvent(e)) {
-            switch(e.type) {
-            case sf::Event::Closed:
-                window.close();
-                break;
-            case sf::Event::Resized:
-                std::cout << "New width: " << window.getSize().x << '\n'
-                          << "New height: " << window.getSize().y << '\n';
-                break;
-            case sf::Event::KeyPressed:
-                std::cout << "Received key " << (e.key.code == sf::Keyboard::X ? "X" : "(other)") << "\n";
-                if(e.key.code == sf::Keyboard::Escape)
-                    shouldExit = true;
-                break;
-            default:
-                break;
-            }
+
+    /*
+     * logica jocului
+     */
+
+    auto& window = renderEngine::getInstance().getWindow();
+
+
+    auto& gameState = wordleEngine::getInstance();
+
+    while(window.isOpen() && !gameState.isFinished()) {
+
+        sf::Event event{};
+        while(window.pollEvent(event)) {
+            gameState.handleEvent(event);
         }
-        if(shouldExit) {
+
+        if (wordleEngine::getInstance().isFinished()) {
             window.close();
-            break;
         }
+
         using namespace std::chrono_literals;
         std::this_thread::sleep_for(300ms);
 
+        //draw logic
         window.clear(sf::Color::White);
         window.draw(text);
-        window.draw(circle);
-        window.display();
+
+        gameState.renderState();
+
     }
+
+   // for (auto row : gameGrid) {
+   //     delete row;
+    //}
+    //gameGrid.clear();
     return 0;
 }

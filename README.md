@@ -19,19 +19,19 @@ Nerespectarea duce la nepunctarea proiectului
 
 
 ## Cerințe
-- [ ] definirea a minim **2-3 ieararhii de clase** care sa interactioneze in cadrul temei alese (fie prin compunere, agregare sau doar sa apeleze metodele celeilalte intr-un mod logic) (6p)
+- [X] definirea a minim **2-3 ieararhii de clase** care sa interactioneze in cadrul temei alese (fie prin compunere, agregare sau doar sa apeleze metodele celeilalte intr-un mod logic) (6p)
   - minim o clasa cu:
-    - [ ] constructori de inițializare
-    - [ ] constructor supraîncărcat
-    - [ ] constructori de copiere
+    - [X] constructori de inițializare
+    - [X] constructor supraîncărcat
+    - [X] constructori de copiere
     - [ ] `operator=` de copiere
-    - [ ] destructor
-    - [ ] `operator<<` pentru afișare (std::ostream)
-    - [ ] `operator>>` pentru citire (std::istream)
+    - [X] destructor
+    - [X] `operator<<` pentru afișare (std::ostream)
+    - [X] `operator>>` pentru citire (std::istream)
     - [ ] alt operator supraîncărcat ca funcție membră
     - [ ] alt operator supraîncărcat ca funcție non-membră
   - in derivate
-      - [ ] implementarea funcționalităților alese prin [upcast](https://github.com/Ionnier/poo/tree/main/labs/L04#solu%C8%9Bie-func%C8%9Bii-virtuale-late-binding) și [downcast](https://github.com/Ionnier/poo/tree/main/labs/L04#smarter-downcast-dynamic-cast)
+      - [X] implementarea funcționalităților alese prin [upcast](https://github.com/Ionnier/poo/tree/main/labs/L04#solu%C8%9Bie-func%C8%9Bii-virtuale-late-binding) și [downcast](https://github.com/Ionnier/poo/tree/main/labs/L04#smarter-downcast-dynamic-cast)
         - aceasta va fi făcută prin **2-3** metode specifice temei alese
         - funcțiile pentru citire / afișare sau destructorul nu sunt incluse deși o să trebuiască să le implementați 
       - [ ] apelarea constructorului din clasa de bază din [constructori din derivate](https://github.com/Ionnier/poo/tree/main/labs/L04#comportamentul-constructorului-la-derivare)
@@ -44,18 +44,18 @@ Nerespectarea duce la nepunctarea proiectului
 - [ ] funcții și atribute `static` (în clase) [0.5p](https://github.com/Ionnier/poo/tree/main/labs/L04#static)
   - [ ] 1+ atribute statice non-triviale 
   - [ ] 1+ funcții statice non-triviale
-- [ ] excepții [0.5p](https://github.com/Ionnier/poo/tree/main/labs/L04#exception-handling)
+- [X] excepții [0.5p](https://github.com/Ionnier/poo/tree/main/labs/L04#exception-handling)
   - porniți de la `std::exception`
   - ilustrați propagarea excepțiilor
   - ilustrati upcasting-ul în blocurile catch
   - minim folosit într-un loc în care tratarea erorilor în modurile clasice este mai dificilă
 - [ ] folosirea unei clase abstracte [(0.25p)](https://github.com/Ionnier/poo/tree/main/labs/L04#clase-abstracte)
- - [ ] clase template
-   - [ ] crearea unei clase template [(1p)](https://github.com/Ionnier/poo/tree/main/labs/L08)
-   - [ ] 2 instanțieri ale acestei clase (0.5p)
+ - [X] clase template
+   - [X] crearea unei clase template [(1p)](https://github.com/Ionnier/poo/tree/main/labs/L08)
+   - [X] 2 instanțieri ale acestei clase (0.5p)
  - STL [(0.25p)](https://github.com/Ionnier/poo/tree/main/labs/L07#stl)
-   - [ ] utilizarea a două structuri (containere) diferite (vector, list sau orice alt container care e mai mult sau mai putin un array)
-   - [ ] utilizarea a unui algoritm cu funcție lambda (de exemplu, sort, transform)
+   - [X] utilizarea a două structuri (containere) diferite (vector, list sau orice alt container care e mai mult sau mai putin un array)
+   - [X] utilizarea a unui algoritm cu funcție lambda (de exemplu, sort, transform)
  - Design Patterns [(0.75p)](https://github.com/Ionnier/poo/tree/main/labs/L08)
    - [ ] utilizarea a două șabloane de proiectare
 

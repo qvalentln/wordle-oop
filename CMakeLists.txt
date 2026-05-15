@@ -143,6 +143,16 @@ add_executable(${PROJECT_NAME}
     main.cpp
     ${SOURCES}
     env_fixes.h
+        include/wordle.h
+        include/decrypt.h
+        include/resman.h
+        include/resman.h
+        src/wordle.cpp
+        src/decrypt.cpp
+        src/resman.cpp
+        src/resman.cpp
+        include/gameEngine.h
+        src/gameEngine.cpp
 )
 
 include(cmake/CompilerFlags.cmake)
@@ -220,3 +230,7 @@ include(cmake/CopyHelper.cmake)
 copy_files(FILES tastatura.txt)
 # copy_files(FILES tastatura.txt config.json DIRECTORY images sounds)
 # copy_files(DIRECTORY images sounds)
+
+# copiez resursele
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources"
+        DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
