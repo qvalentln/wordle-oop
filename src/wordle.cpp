@@ -1,7 +1,11 @@
 
+// cppcheck-suppress missingInclude
+#include "SFML/Graphics.hpp"
+
 #include<wordle.h>
 #include<string>
-#include "SFML/Graphics.hpp"
+
+
 
 
 LetterTile::LetterTile(const sf::Vector2f& pos, const sf::Color& color, float size, float thickness, char letter):
