@@ -69,7 +69,6 @@ public:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     //void update(float dt) override {}
 
-    const std::vector<LetterTile>& getTiles() const{return tiles;}
     LetterTile& operator[](int idx);
     const LetterTile& operator[](int idx) const;
 
@@ -81,7 +80,7 @@ class AlphabetStatus : public BaseEntity{
 private:
     std::map<char, std::unique_ptr<BaseEntity> > letterTiles;
 public:
-    AlphabetStatus(const sf::Vector2f& startPos);
+    explicit AlphabetStatus(const sf::Vector2f& startPos);
 
     void updateLetter(char c, const TileStatus& newStatus);
 

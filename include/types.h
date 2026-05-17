@@ -47,10 +47,10 @@ public:
 	gameState(const gameState& other) = delete;
 	gameState& operator=(const gameState& other) = delete;
 
-	std::unique_ptr<AppState> handleEvent(const sf::Event& event);
+	std::unique_ptr<AppState> handleEvent(const sf::Event& event) override;
 
-	void update(sf::RenderWindow& window);
-	void render(sf::RenderWindow& window);
+	void update(sf::RenderWindow& window) override;
+	void render(sf::RenderWindow& window) override;
 };
 
 

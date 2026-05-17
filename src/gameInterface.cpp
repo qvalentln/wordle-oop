@@ -80,7 +80,7 @@ void resultPopup::draw(sf::RenderTarget& target, sf::RenderStates states) const 
 
 	auto* window = dynamic_cast<sf::RenderWindow*>(&target);
 	if (window) {
-		for (auto& btn : buttons) {
+		for (const auto& btn : buttons) {
 			btn->draw(*window);
 		}
 	}
@@ -283,7 +283,7 @@ void mainMenu::render(sf::RenderWindow &window){
 	window.clear(sf::Color::White);
 
 	window.draw(gameTitle);
-	for (auto& bttn : buttons) {
+	for (const auto& bttn : buttons) {
 		bttn->draw(window);
 	}
 	window.display();

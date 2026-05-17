@@ -29,31 +29,6 @@ std::string ResourceManager::getPathTo(const ResourceType type, const std::strin
 /// Metode DisplayManager
 /// tot jocul il gandesc pe un canvas 800x600
 
-void DisplayManager::syncResolution(sf::RenderWindow& window, sf::View& gameView) {
-    // Preiau rezolutia actuala
-    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-
-    if (!window.isOpen()) {
-        window.create(desktop, "Wordle", sf::Style::Fullscreen);
-    }
-
-    gameView.setSize(static_cast<float>(desktop.width),
-        static_cast<float>(desktop.height));
-
-    gameView.setCenter(static_cast<float>(desktop.width) / 2.f,
-        static_cast<float>(desktop.height) / 2.f);
-
-    window.setView(gameView);
-    // Setez inca o data vsync ptr safety
-    window.setVerticalSyncEnabled(true);
-
-}
-
-sf::Vector2f DisplayManager::getCenterPos(const sf::RenderWindow& window) {
-    sf::Vector2u size = window.getSize();
-    return {static_cast<float>(size.x) / 2.f, static_cast<float>(size.y) / 2.f};
-}
-
 
 sf::View DisplayManager::computeLetterbox(const sf::Vector2u& windowSize, float virtualWidth, float virtualHeight) {
     const float windowWidth = static_cast<float>(windowSize.x);
