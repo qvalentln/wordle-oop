@@ -1,53 +1,15 @@
-/// NOTE: this include is needed for environment-specific fixes     //
-/// You can remove this include and the call from main              //
-/// if you have tested on all environments, and it works without it //
-#include <SFML/Graphics.hpp>
-
-
+// SFML 2.6.1
+#include <SFML/Graphics.hpp> // face urat daca nu il bag primul
 
 #include "env_fixes.h"
 #include <gameEngine.h> // Core game logic
-#include <resman.h>     // Resource manager things
-
 
 #include <chrono>
 #include <thread>
 
-
-
-
-/*
-class AlphabetStatus : public BaseEntity{
-private:
-    std::map<char, std::unique_ptr<LetterTile> > letterTiles;
-public:
-    AlphabetStatus(sf::Vector2f startPos) {
-        float size = 25.f;
-        float padding = 5.f;
-
-        LetterTile::setGlobalTileSize(size);
-
-        for (int i = 0; i < 26; ++i) {
-            char c = 'A' + i;
-
-            float x = startPos.x + (i%13) * (size + padding);
-            float y = startPos.y + (i/13) * (size + padding);
-
-            letterTiles[c] = std::make_unique<LetterTile>(sf::Vector2f(x,y),c);
-        }
-        LetterTile::setGlobalTileSize(60.f);
-    }
-
-    void updateLetter(char c, LetterTile::TileStatus newStatus)
-};*/
-
-
 int main() {
     /// NOTE: this function call is needed for environment-specific fixes //
     init_threads();
-    //2.6.1
-    //std::cout<<SFML_VERSION_MAJOR<<'.'<<SFML_VERSION_MINOR<<'.'<<SFML_VERSION_PATCH<<std::endl;
-
 
     /////////////////////////////////////////////////////////////////////////
     /// Observație: dacă aveți nevoie să citiți date de intrare de la tastatură,
@@ -70,37 +32,39 @@ int main() {
     ///
     /////////////////////////////////////////////////////////////////////////
 
-
-    sf::Text text;
-    FontManager::sharedInstance();
-
-
-    text.setFont(FontManager::sharedInstance().font());
-    text.setString("Hello World!");
-    text.setCharacterSize(34);
-    text.setFillColor(sf::Color(83,141,78)); //moss green
-    text.setStyle(sf::Text::Italic);
-
-    text.setPosition(15, 15);
-
-
     /*
      * logica jocului
      */
+    auto& renderState = renderEngine::sharedInstance();
+    auto& window = renderEngine::sharedInstance().getWindow();
+    auto& gameState = wordleEngine::sharedInstance();
 
-    auto& window = renderEngine::getInstance().getWindow();
+    auto& menu= mainMenu::sharedInstance();
+
+    appState state = appState::MENU;
 
 
-    auto& gameState = wordleEngine::getInstance();
-
-    while(window.isOpen() && !gameState.isFinished()) {
+    while(window.isOpen() && state != appState::EXIT && !renderState.shouldExit()) {
 
         sf::Event event{};
         while(window.pollEvent(event)) {
-            gameState.handleEvent(event);
+
+            if (state == appState::MENU) {
+                menu.handleEvent(event,window,state);
+                if (event.type == sf::Event::Closed) {
+                    window.close();
+                }
+            }
+            else if (state == appState::GAME) {
+                gameState.handleEvent(event, state);
+            }
         }
 
-        if (wordleEngine::getInstance().isFinished()) {
+        if (state == appState::MENU) {
+            menu.update(window);
+        }
+
+        if (renderEngine::sharedInstance().shouldExit()) {
             window.close();
         }
 
@@ -109,15 +73,20 @@ int main() {
 
         //draw logic
         window.clear(sf::Color::White);
-        window.draw(text);
 
-        gameState.renderState();
-
+        if (state == appState::MENU) {
+            window.setView(renderEngine::sharedInstance().getGameView());
+            menu.draw(window);
+            window.display();
+        }
+        else if (state == appState::GAME) {
+            gameState.renderState();
+        }
     }
 
-   // for (auto row : gameGrid) {
-   //     delete row;
-    //}
-    //gameGrid.clear();
+    // Cumva am apasat butonul EXIT
+    if (window.isOpen()) {
+        window.close();
+    }
     return 0;
 }

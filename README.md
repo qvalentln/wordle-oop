@@ -24,7 +24,7 @@ Nerespectarea duce la nepunctarea proiectului
     - [X] constructori de inițializare
     - [X] constructor supraîncărcat
     - [X] constructori de copiere
-    - [ ] `operator=` de copiere
+    - [X] `operator=` de copiere
     - [X] destructor
     - [X] `operator<<` pentru afișare (std::ostream)
     - [X] `operator>>` pentru citire (std::istream)
@@ -42,8 +42,8 @@ Nerespectarea duce la nepunctarea proiectului
   - ierarhie de clasa se considera si daca exista doar o clasa de bază însă care nu moștenește dintr-o clasă din altă ierarhie
 - [ ] cât mai multe `const` [(0.25p)](https://github.com/Ionnier/poo/tree/main/labs/L04#reminder-const-everywhere)
 - [ ] funcții și atribute `static` (în clase) [0.5p](https://github.com/Ionnier/poo/tree/main/labs/L04#static)
-  - [ ] 1+ atribute statice non-triviale 
-  - [ ] 1+ funcții statice non-triviale
+  - [X] 1+ atribute statice non-triviale 
+  - [X] 1+ funcții statice non-triviale
 - [X] excepții [0.5p](https://github.com/Ionnier/poo/tree/main/labs/L04#exception-handling)
   - porniți de la `std::exception`
   - ilustrați propagarea excepțiilor

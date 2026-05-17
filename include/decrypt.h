@@ -25,7 +25,7 @@ private:
     static constexpr char key=0x3;
 
 public:
-    virtual ~SecureDictionary();
+    ~SecureDictionary();
     SecureDictionary() : rawData(nullptr), dataSize(0) {}
     SecureDictionary(const SecureDictionary& other);
     SecureDictionary(SecureDictionary&& other) noexcept;

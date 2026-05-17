@@ -153,6 +153,11 @@ add_executable(${PROJECT_NAME}
         src/resman.cpp
         include/gameEngine.h
         src/gameEngine.cpp
+        include/example.h
+        src/example.cpp
+        include/gameInterface.h
+        src/gameInterface.cpp
+        include/types.h
 )
 
 include(cmake/CompilerFlags.cmake)

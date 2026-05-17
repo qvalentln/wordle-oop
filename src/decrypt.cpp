@@ -40,6 +40,8 @@ noexcept: rawData(other.rawData),dataSize(other.dataSize), words(std::move(other
 SecureDictionary& SecureDictionary::operator=(const SecureDictionary& other) {
     if (this != &other) {
         delete[] rawData;
+
+        // copiere
         dataSize=other.dataSize;
         words=other.words;
         if (other.rawData) {
@@ -52,6 +54,8 @@ SecureDictionary& SecureDictionary::operator=(const SecureDictionary& other) {
         }
 
     }
+
+
     return *this;
 }
 
@@ -136,7 +140,7 @@ std::string SecureDictionary::getRandomWord() const {
         throw DictionaryException("Dictionarul este gol!!!");
     }
 
-    // sofalfuhdlajkryhnfjkalhfjansouyhewghrelqjerkqsadlikyqeuielqh
+    // shahahahhahahhafffffalfuhhhyyyydlajkryyuuhnfjkalhfjansouyhewghrelqjerkqsadlikyqeuielqh
     static std::mt19937 gen(static_cast<unsigned int>(std::time(0)));
     std::uniform_int_distribution<> distribution(0, words.size()-1);
 

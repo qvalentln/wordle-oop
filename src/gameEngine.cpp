@@ -7,7 +7,7 @@
 
 
 
-renderEngine::renderEngine () : desktop(sf::VideoMode::getDesktopMode()) {
+renderEngine::renderEngine () : desktop(sf::VideoMode::getDesktopMode()), keepOpen(true) {
 
 	//DisplayManager::syncResolution(window, gameView);
 	window.create(desktop, "miniWordle", sf::Style::Fullscreen);
@@ -35,9 +35,7 @@ void renderEngine::resize(const sf::Event& event) {
 	window.setView(gameView);
 }
 
-void renderEngine::close() {
-	window.close();
-}
+
 
 // Wordle Engine
 
@@ -51,25 +49,73 @@ std::ostream& operator<<(std::ostream &os, const wordleEngine &self) {
 
 void wordleDebugInfo() {
 	std::cout << "Debug info:" << std::endl;
-	std::cout << wordleEngine::getInstance().currentRowIdx << std::endl;
+	std::cout << wordleEngine::sharedInstance().currentRowIdx << std::endl;
 }
 
 
-wordleEngine::wordleEngine() : currentRowIdx(0), shouldExit(false), targetWord("") {
+wordleEngine::wordleEngine() : currentRowIdx(0), rowCount(6), showAlphabet(true), isGameOver(false), targetWord("MACOS")  {
+	// dummy values, initGame does all the work
+}
+
+void wordleEngine::initGame(gameDifficulty &difficulty) {
+
+	isGameOver = false;
+	currentRowIdx = 0;
+	endPopup.reset();
+
+	switch (difficulty) {
+		case gameDifficulty::NORMAL:
+			this->rowCount = 6;
+			this->showAlphabet = true;
+			break;
+		case gameDifficulty::HARD:
+			this->rowCount = 3;
+			this->showAlphabet = true;
+			break;
+		case gameDifficulty::IMPOSSIBLE:
+			this->rowCount = 1;
+			this->showAlphabet = false;
+			break;
+		default:
+			break;
+	}
+
 	try {
 		dict.loadFromBinary("resources/words.bin");
-		targetWord = dict.getRandomWord();
+		this->targetWord = dict.getRandomWord();
 		std::cout << "CUVANT: " << targetWord << std::endl;
 
 	}
 	catch (const std::exception&) {
 		// Cumva nu am putut lua cuvant din dict
-		shouldExit = true;
+		isGameOver = true;
 	}
-	for (int i = 0; i < 6; ++i) {
-		float yPos = 100.f + i * 75.f;
-		gameGrid.push_back(std::make_unique<WordRow>(yPos));
+
+	gameGrid.clear();
+
+	float startY = 50.f;
+	float padding = 55.f;
+
+	float lastY = startY;
+	for (int i = 0; i < rowCount; ++i) {
+		lastY = startY + i * padding;
+		gameGrid.push_back(std::make_unique<WordRow>(lastY));
 	}
+	if (showAlphabet) {
+		constexpr float alphabetOffset = 80.f;
+		// 800x600 virtual screen
+		// num_litere * (size + padding)
+		constexpr float alphabetWidth = 13 * (35.f + 5.f);
+		constexpr float startX = (800.f - alphabetWidth) / 2.f;
+
+		sf::Vector2f alphabetPos(startX, lastY + alphabetOffset);
+
+		alphabet = std::make_unique<AlphabetStatus>(alphabetPos);
+	}
+	else {
+		alphabet.reset();
+	}
+
 
 }
 
@@ -82,7 +128,7 @@ wordleEngine::wordleEngine() : currentRowIdx(0), shouldExit(false), targetWord("
 void wordleEngine::handleKeyPress(const sf::Event &event) {
 
 	if (currentRowIdx >= static_cast<int>(gameGrid.size())){
-		shouldExit = true;
+		isGameOver = true;
 		return;
 	}
 
@@ -99,7 +145,9 @@ void wordleEngine::handleKeyPress(const sf::Event &event) {
 		if (input.size() == 5) {
 			validateRow(*currentRow, targetWord);
 			if (input == targetWord) {
-				shouldExit = true;
+
+				isGameOver = true;
+				endPopup = std::make_unique<resultPopup>(true, targetWord);
 				std::cout << "ai castigat!" << std::endl;
 
 			}
@@ -107,33 +155,58 @@ void wordleEngine::handleKeyPress(const sf::Event &event) {
 
 			// Print some debug info
 
-
-
-
 		}
 	}
 	else if (event.key.code == sf::Keyboard::Escape) {
-		shouldExit = true;
+		renderEngine::sharedInstance().signalExit();
 	}
 }
 
-void wordleEngine::handleEvent(const sf::Event& event) {
-	auto& window = renderEngine::getInstance().getWindow();
+
+
+void wordleEngine::handleEvent(const sf::Event& event, appState& gameState) {
+	auto& window = renderEngine::sharedInstance().getWindow();
+	if (isGameOver && endPopup) {
+		bool shouldReset = false;
+		auto* popup = dynamic_cast<resultPopup*>(endPopup.get());
+		if (popup) {
+			popup->handleEvent(event,window,gameState,shouldReset);
+		}
+
+		if (shouldReset) {
+			gameDifficulty currDiff = getGameDifficulty();
+			initGame(currDiff);
+		}
+		return;
+	}
+
+	if (isGameOver){
+		if (event.type == sf::Event::Closed) {
+			window.close();
+			renderEngine::sharedInstance().signalExit();
+		}
+		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
+			renderEngine::sharedInstance().signalExit();
+		}
+		return;
+	}
 
 	switch (event.type) {
 		case sf::Event::Closed:
 			window.close();
-			shouldExit = true;
+			renderEngine::sharedInstance().signalExit();
 			break;
 
 		case sf::Event::Resized:
-			renderEngine::getInstance().resize(event);
+			renderEngine::sharedInstance().resize(event);
 			break;
 
 		case sf::Event::TextEntered: {
 
 			if (currentRowIdx >= static_cast<int>(gameGrid.size())){
-				shouldExit = true;
+				// trebuie sa inchid fereastra
+				isGameOver = true;
+				endPopup = std::make_unique<resultPopup>(false, targetWord);
 				std::cout<<"ai pierdut! :(" << std::endl;
 			}
 			else {
@@ -160,6 +233,9 @@ void wordleEngine::handleEvent(const sf::Event& event) {
 }
 
 
+// Update the board row,
+// but ensure that the alphabetStatus
+// is also kept uptodate
 void wordleEngine::validateRow(WordRow &row, const std::string &target) {
 	std::string guess = row.getWord();
 	std::string upperTarget = target;
@@ -171,36 +247,63 @@ void wordleEngine::validateRow(WordRow &row, const std::string &target) {
 		char currentLetter = std::toupper(guess[i]);
 		if (currentLetter == upperTarget[i]) {
 			row[i].setStatus(TileStatus::CORRECT);
-			//am consumat litera
-			//upperTarget[i] = '*';
-		}
-	}
 
-	for (int i=0;i<5;++i) {
-		char currentLetter = std::toupper(guess[i]);
-		if (currentLetter == std::toupper(target[i])) {
-			continue;
-		}
-		auto it = std::find(upperTarget.begin(), upperTarget.end(), currentLetter);
-		if (it != upperTarget.end()) {
-			row[i].setStatus(TileStatus::MISPLACED);
-			*it = '*';
+			if(sharedInstance().showAlphabet) {
+				sharedInstance().alphabet->updateLetter(currentLetter, TileStatus::CORRECT);
+			}
 		}
 		else {
-			row[i].setStatus(TileStatus::WRONG);
-		}
+			auto it = std::find(upperTarget.begin(), upperTarget.end(), currentLetter);
+			if (it != upperTarget.end() && ) {
+				row[i].setStatus(TileStatus::MISPLACED);
 
+				if (sharedInstance().showAlphabet) {
+					sharedInstance().alphabet->updateLetter(currentLetter, TileStatus::MISPLACED);
+				}
+
+				*it = '*';
+			}
+			else {
+				row[i].setStatus(TileStatus::WRONG);
+
+				if (sharedInstance().showAlphabet) {
+					sharedInstance().alphabet->updateLetter(currentLetter, TileStatus::WRONG);
+				}
+			}
+		}
 	}
+
+
+}
+
+gameDifficulty wordleEngine::getGameDifficulty() const {
+	if (this->rowCount == 6) return gameDifficulty::NORMAL;
+	else if (this->rowCount == 3) return gameDifficulty::HARD;
+	else return gameDifficulty::IMPOSSIBLE;
 }
 
 
 void wordleEngine::renderState() const {
-	auto& window = renderEngine::getInstance().getWindow();
+	auto& window = renderEngine::sharedInstance().getWindow();
+	window.clear(sf::Color::White);
+	window.setView(renderEngine::sharedInstance().getGameView());
 
 	for (auto& row : gameGrid) {
 		window.draw(*row);
 	}
-	window.setView(renderEngine::getInstance().getGameView());
+
+	if (alphabet && showAlphabet) {
+		window.draw(*alphabet);
+	}
+	if (isFinished() && endPopup) {
+
+		auto* popup = dynamic_cast<resultPopup*>(endPopup.get());
+		if (popup) {
+			popup->update(renderEngine::sharedInstance().getWindow());
+		}
+		window.draw(*endPopup);
+	}
+
 	window.display();
 
 }
