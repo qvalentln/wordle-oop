@@ -55,11 +55,11 @@ sf::Vector2f DisplayManager::getCenterPos(const sf::RenderWindow& window) {
 }
 
 
-sf::View DisplayManager::computeLetterbox(sf::Vector2u windowSize, float virtualWidth, float virtualHeight) {
-    float windowWidth = static_cast<float>(windowSize.x);
-    float windowHeight = static_cast<float>(windowSize.y);
-    float windowRatio = windowWidth / windowHeight;
-    float viewRatio = virtualWidth / virtualHeight;
+sf::View DisplayManager::computeLetterbox(const sf::Vector2u& windowSize, float virtualWidth, float virtualHeight) {
+    const float windowWidth = static_cast<float>(windowSize.x);
+    const float windowHeight = static_cast<float>(windowSize.y);
+    const float windowRatio = windowWidth / windowHeight;
+    const float viewRatio = virtualWidth / virtualHeight;
 
     float sizeX = 1.f, sizeY = 1.f;
     float posX = 0.f, posY = 0.f;

@@ -28,20 +28,20 @@ Nerespectarea duce la nepunctarea proiectului
     - [X] destructor
     - [X] `operator<<` pentru afișare (std::ostream)
     - [X] `operator>>` pentru citire (std::istream)
-    - [ ] alt operator supraîncărcat ca funcție membră
-    - [ ] alt operator supraîncărcat ca funcție non-membră
+    - [X] alt operator supraîncărcat ca funcție membră
+    - [X] alt operator supraîncărcat ca funcție non-membră
   - in derivate
       - [X] implementarea funcționalităților alese prin [upcast](https://github.com/Ionnier/poo/tree/main/labs/L04#solu%C8%9Bie-func%C8%9Bii-virtuale-late-binding) și [downcast](https://github.com/Ionnier/poo/tree/main/labs/L04#smarter-downcast-dynamic-cast)
         - aceasta va fi făcută prin **2-3** metode specifice temei alese
         - funcțiile pentru citire / afișare sau destructorul nu sunt incluse deși o să trebuiască să le implementați 
-      - [ ] apelarea constructorului din clasa de bază din [constructori din derivate](https://github.com/Ionnier/poo/tree/main/labs/L04#comportamentul-constructorului-la-derivare)
-      - [ ] suprascris [cc](https://github.com/Ionnier/poo/tree/main/labs/L04#comportamentul-constructorului-de-copiere-la-derivare)/op= pentru copieri/atribuiri corecte
-      - [ ] destructor [virtual](https://github.com/Ionnier/poo/tree/main/labs/L04#solu%C8%9Bie-func%C8%9Bii-virtuale-late-binding)
+      - [X] apelarea constructorului din clasa de bază din [constructori din derivate](https://github.com/Ionnier/poo/tree/main/labs/L04#comportamentul-constructorului-la-derivare)
+      - [X] suprascris [cc](https://github.com/Ionnier/poo/tree/main/labs/L04#comportamentul-constructorului-de-copiere-la-derivare)/op= pentru copieri/atribuiri corecte
+      - [X] destructor [virtual](https://github.com/Ionnier/poo/tree/main/labs/L04#solu%C8%9Bie-func%C8%9Bii-virtuale-late-binding)
   - pentru celelalte clase se va definii doar ce e nevoie
   - minim o ierarhie mai dezvoltata (cu 2-3 clase dintr-o clasa de baza)
   - ierarhie de clasa se considera si daca exista doar o clasa de bază însă care nu moștenește dintr-o clasă din altă ierarhie
-- [ ] cât mai multe `const` [(0.25p)](https://github.com/Ionnier/poo/tree/main/labs/L04#reminder-const-everywhere)
-- [ ] funcții și atribute `static` (în clase) [0.5p](https://github.com/Ionnier/poo/tree/main/labs/L04#static)
+- [X] cât mai multe `const` [(0.25p)](https://github.com/Ionnier/poo/tree/main/labs/L04#reminder-const-everywhere)
+- [X] funcții și atribute `static` (în clase) [0.5p](https://github.com/Ionnier/poo/tree/main/labs/L04#static)
   - [X] 1+ atribute statice non-triviale 
   - [X] 1+ funcții statice non-triviale
 - [X] excepții [0.5p](https://github.com/Ionnier/poo/tree/main/labs/L04#exception-handling)

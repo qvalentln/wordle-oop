@@ -4,7 +4,7 @@
 #include "SFML/Graphics.hpp"
 
 
-LetterTile::LetterTile(const sf::Vector2f& pos, const sf::Color& color, const float& size, const float& thickness, const char& letter):
+LetterTile::LetterTile(const sf::Vector2f& pos, const sf::Color& color, float size, float thickness, char letter):
 status(TileStatus::EMPTY), borderThickness(thickness) {
 
 	const sf::Vector2f boxSize = sf::Vector2f(size,size);
@@ -54,7 +54,7 @@ LetterTile & LetterTile::operator=(const LetterTile &other) {
 
 
 
-void LetterTile::setLetter(const char& c) {
+void LetterTile::setLetter(char c) {
 	if (c==' ')text.setString("");
 	else text.setString(std::string(1,std::toupper(c)));
 
@@ -166,11 +166,9 @@ const LetterTile& WordRow::operator[](int idx) const {
 }
 
 
-AlphabetStatus::AlphabetStatus(sf::Vector2f startPos) {
+AlphabetStatus::AlphabetStatus(const sf::Vector2f& startPos) {
 	const float size = 35.f;
 	const float padding = 5.f;
-
-	float totalWidth = 13 * (size + padding);
 
 	for (int i = 0; i < 26; ++i) {
 		char c = 'A' + i;
@@ -187,7 +185,7 @@ AlphabetStatus::AlphabetStatus(sf::Vector2f startPos) {
 	}
 }
 
-void AlphabetStatus::updateLetter(char c, TileStatus newStatus) {
+void AlphabetStatus::updateLetter(char c, const TileStatus& newStatus) {
 
 
 	auto it = letterTiles.find(c);
@@ -208,7 +206,7 @@ void AlphabetStatus::draw(sf::RenderTarget& target, sf::RenderStates states) con
 	}
 }
 
-bool operator>(LetterTile tile1, LetterTile tile2) {
+bool operator>(const LetterTile& tile1, const LetterTile& tile2) {
 	// dau prioritati culorilor
 
 	auto getPriority = [](TileStatus status) {

@@ -38,7 +38,7 @@ public:
     void decryptAndParse();
     void loadFromBinary(const std::string& path);
     bool checkWord(const std::string &guess) const;
-    std::string getRandomWord() const;
+    const std::string& getRandomWord() const;
 };
 
 

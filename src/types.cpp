@@ -21,7 +21,7 @@ void gameState::update(sf::RenderWindow &window) {
 	//
 }
 
-void gameState::render(sf::RenderWindow &window) {
+void gameState::render(sf::RenderWindow &) {
 
 	wordleEngine::sharedInstance().renderState();
 }

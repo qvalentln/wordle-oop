@@ -5,7 +5,6 @@
 #ifndef OOP_WORDLE_H
 #define OOP_WORDLE_H
 
-
 #include <resman.h>
 #include <types.h>
 #include <memory>
@@ -40,13 +39,13 @@ public:
 
 
     //constructor
-    LetterTile(const sf::Vector2f& pos, const sf::Color& color, const float& size, const float& thickness, const char& letter=' ');
+    LetterTile(const sf::Vector2f& pos, const sf::Color& color, float size, float thickness, char letter=' ');
     LetterTile(const LetterTile& other);
     LetterTile& operator=(const LetterTile& other);
-    void setLetter(const char& c);
+    void setLetter(char c);
     void setStatus(const TileStatus& s);
     TileStatus getStatus() const {return status;};
-    friend bool operator>(LetterTile tile1, LetterTile tile2);
+    friend bool operator>(const LetterTile& tile1, const LetterTile& tile2);
 
     void draw(sf::RenderTarget& target,const sf::RenderStates states) const override;
 
@@ -70,7 +69,7 @@ public:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     //void update(float dt) override {}
 
-    std::vector<LetterTile>& getTiles() {return tiles;}
+    const std::vector<LetterTile>& getTiles() const{return tiles;}
     LetterTile& operator[](int idx);
     const LetterTile& operator[](int idx) const;
 
@@ -82,9 +81,9 @@ class AlphabetStatus : public BaseEntity{
 private:
     std::map<char, std::unique_ptr<BaseEntity> > letterTiles;
 public:
-    AlphabetStatus(sf::Vector2f startPos);
+    AlphabetStatus(const sf::Vector2f& startPos);
 
-    void updateLetter(char c, TileStatus newStatus);
+    void updateLetter(char c, const TileStatus& newStatus);
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

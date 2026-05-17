@@ -95,8 +95,8 @@ void wordleEngine::initGame(gameDifficulty &difficulty) {
 
 	gameGrid.clear();
 
-	float startY = 50.f;
-	float padding = 55.f;
+	const float startY = 50.f;
+	const float padding = 55.f;
 
 	float lastY = startY;
 	for (int i = 0; i < rowCount; ++i) {
@@ -177,7 +177,7 @@ std::string wordleEngine::handleEvent(const sf::Event& event) {
 	auto& window = renderEngine::sharedInstance().getWindow();
 
 	if (isGameOver && endPopup) {
-		bool shouldReset = false;
+
 		auto* popup = dynamic_cast<resultPopup*>(endPopup.get());
 		if (popup) {
 			std::string action = popup->handleEvent(event,window);

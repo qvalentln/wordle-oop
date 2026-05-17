@@ -56,8 +56,6 @@ public:
 	mainMenu(const mainMenu& other) = delete;
 	mainMenu& operator=(const mainMenu& other) = delete;
 
-
-
 	std::unique_ptr<AppState> handleEvent(const sf::Event& event);
 	void update(sf::RenderWindow& window);
 	void render(sf::RenderWindow& window);

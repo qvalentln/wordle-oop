@@ -135,7 +135,7 @@ bool SecureDictionary::checkWord(const std::string &guess) const{
     });
 }
 
-std::string SecureDictionary::getRandomWord() const {
+const std::string& SecureDictionary::getRandomWord() const {
     if (words.empty()) {
         throw DictionaryException("Dictionarul este gol!!!");
     }
