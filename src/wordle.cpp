@@ -23,7 +23,7 @@ status(TileStatus::EMPTY), borderThickness(thickness) {
 		throw;
 	}
 
-	text.setCharacterSize(boxSize.x);
+	text.setCharacterSize(static_cast<unsigned int>(boxSize.x));
 	text.setFillColor(sf::Color::Black);
 	text.setString(letter);
 	setLetter(letter);
@@ -62,7 +62,7 @@ void LetterTile::setLetter(char c) {
 	const sf::FloatRect textRect=text.getLocalBounds();
 	const sf::Vector2f currentBoxSize = box.getSize();
 
-	text.setCharacterSize(currentBoxSize.x);
+	text.setCharacterSize(static_cast<unsigned int>(currentBoxSize.x));
 	text.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
 
 	const sf::Vector2f currentBoxPos = box.getPosition();
