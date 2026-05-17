@@ -254,7 +254,7 @@ void wordleEngine::validateRow(WordRow &row, const std::string &target) {
 		}
 		else {
 			auto it = std::find(upperTarget.begin(), upperTarget.end(), currentLetter);
-			if (it != upperTarget.end() && ) {
+			if (it != upperTarget.end()) {
 				row[i].setStatus(TileStatus::MISPLACED);
 
 				if (sharedInstance().showAlphabet) {
