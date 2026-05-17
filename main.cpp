@@ -47,6 +47,13 @@ int main() {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+            // edge case din capul meu:
+            // ce se intampla daca schimb rezolutia
+            // din nvidia control panel, de ex?
+            if (event.type == sf::Event::Resized) {
+                sf::View gameView = DisplayManager::computeLetterbox(window.getSize(), 800.f, 600.f);
+                window.setView(gameView);
+            }
             if (currentState) {
                 auto nextState = currentState->handleEvent(event);
                 if (nextState) {

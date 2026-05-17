@@ -128,20 +128,23 @@ void SecureDictionary::loadFromBinary(const std::string& path) {
 }
 
 //  Check daca input apare in dictionar
-/*
+
 bool SecureDictionary::checkWord(const std::string &guess) const{
-    return std::ranges::any_of(words.begin(),words.end(), [&guess](const std::string& word) {
-        return guess==word;
+    return std::ranges::any_of(words, [&](const std::string& word) {
+        return word == guess;
     });
 }
-*/
+
 std::string SecureDictionary::getRandomWord() const {
     if (words.empty()) {
         throw DictionaryException("Dictionarul este gol!!!");
     }
 
     // shahahahhahahhafffffalfuhhhyyyydlajkryyuuhnfjkalhfjansouyhewghrelqjerkqsadlikyqeuielqh
+    // folosesc timpul curent ca seed,
+    // ceva algoritm mersenne din std ptr random
     static std::mt19937 gen(static_cast<unsigned int>(std::time(0)));
+    // cuv au ac prob
     std::uniform_int_distribution<> distribution(0, words.size()-1);
 
     return words[distribution(gen)];

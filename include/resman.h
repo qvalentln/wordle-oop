@@ -49,8 +49,8 @@ public:
 
 class DisplayManager {
 public:
-    //static void syncResolution(sf::RenderWindow& window, sf::View& gameView);
-    //static sf::Vector2f getCenterPos(const sf::RenderWindow& window);
+    static void syncResolution(sf::RenderWindow& window, sf::View& gameView);
+    static sf::Vector2f getCenterPos(const sf::RenderWindow& window);
     static sf::View computeLetterbox(sf::Vector2u windowSize, float virtualWidth, float virtualHeight);
 
 };

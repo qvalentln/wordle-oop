@@ -15,6 +15,12 @@
 
 class BaseEntity : public sf::Drawable {
 public:
+
+    BaseEntity() = default;
+
+    BaseEntity(const BaseEntity& other) = default;
+    BaseEntity& operator=(const BaseEntity& other) = default;
+
     virtual ~BaseEntity() = default;
     //virtual void update(float dt) = 0;
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const  = 0;
@@ -34,12 +40,15 @@ public:
 
 
     //constructor
-    LetterTile(sf::Vector2f pos, sf::Color color, float size, float thickness, char letter=' ');
+    LetterTile(const sf::Vector2f& pos, const sf::Color& color, const float& size, const float& thickness, const char& letter=' ');
     LetterTile(const LetterTile& other);
-
+    LetterTile& operator=(const LetterTile& other);
     void setLetter(const char& c);
-    void setStatus(const TileStatus s);
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    void setStatus(const TileStatus& s);
+    TileStatus getStatus() const {return status;};
+    friend bool operator>(LetterTile tile1, LetterTile tile2);
+
+    void draw(sf::RenderTarget& target,const sf::RenderStates states) const override;
 
 };
 
@@ -52,6 +61,8 @@ private:
 public:
 
     explicit WordRow(float yPos);
+    WordRow(const WordRow& other);
+    WordRow& operator=(const WordRow& other);
 
     void addLetter(char c);
     void removeLetter();
@@ -59,6 +70,7 @@ public:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     //void update(float dt) override {}
 
+    std::vector<LetterTile>& getTiles() {return tiles;}
     LetterTile& operator[](int idx);
     const LetterTile& operator[](int idx) const;
 

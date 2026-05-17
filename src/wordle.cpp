@@ -4,10 +4,10 @@
 #include "SFML/Graphics.hpp"
 
 
-LetterTile::LetterTile(sf::Vector2f pos, sf::Color color, float size, float thickness, char letter):
+LetterTile::LetterTile(const sf::Vector2f& pos, const sf::Color& color, const float& size, const float& thickness, const char& letter):
 status(TileStatus::EMPTY), borderThickness(thickness) {
 
-	sf::Vector2f boxSize = sf::Vector2f(size,size);
+	const sf::Vector2f boxSize = sf::Vector2f(size,size);
 
 	box.setSize(boxSize);
 	box.setPosition(pos);
@@ -22,20 +22,31 @@ status(TileStatus::EMPTY), borderThickness(thickness) {
 		std::cerr << e.what() << std::endl;
 		throw;
 	}
+
 	text.setCharacterSize(boxSize.x);
 	text.setFillColor(sf::Color::Black);
 	text.setString(letter);
 	setLetter(letter);
-
-
 }
 
-LetterTile::LetterTile(const LetterTile &other): box(other.box), text(other.text), status(other.status), borderThickness(other.borderThickness) {
-	//FontManager::sharedInstance().font();
+LetterTile::LetterTile(const LetterTile &other): BaseEntity(other), box(other.box), text(other.text), status(other.status), borderThickness(other.borderThickness) {
 
 	text.setFont(FontManager::sharedInstance().font());
 	text.setFillColor(sf::Color::Black);
 	//text.setFillColor(sf::Color(83,141,78));
+}
+
+LetterTile & LetterTile::operator=(const LetterTile &other) {
+	if (this != &other) {
+		this->box = other.box;
+		this->text = other.text;
+		this->status = other.status;
+		this->borderThickness = other.borderThickness;
+
+		this->text.setFont(FontManager::sharedInstance().font());
+
+	}
+	return *this;
 }
 
 
@@ -48,17 +59,17 @@ void LetterTile::setLetter(const char& c) {
 	else text.setString(std::string(1,std::toupper(c)));
 
 	//centrarea textului in patrat
-	sf::FloatRect textRect=text.getLocalBounds();
-	sf::Vector2f currentBoxSize = box.getSize();
+	const sf::FloatRect textRect=text.getLocalBounds();
+	const sf::Vector2f currentBoxSize = box.getSize();
 
 	text.setCharacterSize(currentBoxSize.x);
 	text.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
 
-	sf::Vector2f currentBoxPos = box.getPosition();
+	const sf::Vector2f currentBoxPos = box.getPosition();
 	text.setPosition(currentBoxPos.x + currentBoxSize.x / 2.0f, currentBoxPos.y + currentBoxSize.y / 2.0f);
 }
 
-void LetterTile::setStatus(const TileStatus s) {
+void LetterTile::setStatus(const TileStatus& s) {
 	status=s;
 	switch (status) {
 		case TileStatus::WRONG:
@@ -81,7 +92,7 @@ void LetterTile::setStatus(const TileStatus s) {
 
 
 
-void LetterTile::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void LetterTile::draw(sf::RenderTarget& target, const sf::RenderStates states) const {
 	target.draw(box,states);
 	target.draw(text,states);
 
@@ -96,8 +107,24 @@ WordRow::WordRow(float yPos) {
 	//cele 5 patratele de pe rand
 	for (int i = 0; i < 5; ++i) {
 		//float xPos = 150.0f + i * (60.0f + padding);
-		tiles.emplace_back(LetterTile(sf::Vector2f(startX + i * (tileSize + padding), yPos), sf::Color::Transparent, 45.f, 1.f));
+		LetterTile tile = LetterTile(sf::Vector2f(startX + i * (tileSize + padding), yPos),
+										sf::Color::Transparent, 45.f, 1.f);
+
+		tiles.push_back(tile);
 	}
+}
+
+WordRow::WordRow(const WordRow &other) : BaseEntity(other), tiles(other.tiles), currentWord(other.currentWord) {
+	//
+}
+
+WordRow & WordRow::operator=(const WordRow &other) {
+
+	if (this != &other) {
+		this->currentWord = other.currentWord;
+		this->tiles = other.tiles;
+	}
+	return *this;
 }
 
 
@@ -161,12 +188,17 @@ AlphabetStatus::AlphabetStatus(sf::Vector2f startPos) {
 }
 
 void AlphabetStatus::updateLetter(char c, TileStatus newStatus) {
+
+
 	auto it = letterTiles.find(c);
 	if (it != letterTiles.end()) {
 		auto* tile = dynamic_cast<LetterTile*>(it->second.get());
 		if (tile) {
-			tile->setStatus(newStatus);
-
+			TileStatus currentStatus = tile->getStatus();
+			// nu dau overwrite la o stare mai buna
+			if (newStatus > currentStatus) {
+				tile->setStatus(newStatus);
+			}
 		}
 	}
 }
@@ -174,4 +206,17 @@ void AlphabetStatus::draw(sf::RenderTarget& target, sf::RenderStates states) con
 	for (auto const& [chr, tilePtr] : letterTiles) {
 		target.draw(*tilePtr, states);
 	}
+}
+
+bool operator>(LetterTile tile1, LetterTile tile2) {
+	// dau prioritati culorilor
+
+	auto getPriority = [](TileStatus status) {
+		if (status == TileStatus::CORRECT) return 3;
+		else if (status == TileStatus::MISPLACED)  return 2;
+		else if (status == TileStatus::WRONG) return 1;
+		else return 0;
+	};
+	return getPriority(tile1.getStatus()) > getPriority(tile2.getStatus());
+
 }

@@ -40,10 +40,12 @@ public:
 
 class gameState : public AppState {
 private:
-	bool requestMenu = false;
+	bool requestMenu;
 
 public:
-	gameState() = default;
+	gameState();
+	gameState(const gameState& other) = delete;
+	gameState& operator=(const gameState& other) = delete;
 
 	std::unique_ptr<AppState> handleEvent(const sf::Event& event);
 

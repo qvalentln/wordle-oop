@@ -1,5 +1,6 @@
 #include <gameEngine.h>
 #include <gameInterface.h>
+#include <algorithm>
 
 
 // This will initialize the game window
@@ -142,21 +143,28 @@ void wordleEngine::handleKeyPress(const sf::Event &event) {
 
 		std::string input = currentRow->getWord();
 		std::cout << "Cuvant introdus: " << currentRow->getWord() << std::endl;
+
+		if (input.size() < 5) {
+			return;
+		}
+		if (!dict.checkWord(input)) {
+			return;
+		}
 		wordleDebugInfo();
-		if (input.size() == 5) {
-			validateRow(*currentRow, targetWord);
-			if (input == targetWord) {
 
-				isGameOver = true;
-				endPopup = std::make_unique<resultPopup>(true, targetWord);
-				std::cout << "ai castigat!" << std::endl;
 
-			}
-			else currentRowIdx++;
+		validateRow(*currentRow, targetWord);
+		if (input == targetWord) {
 
-			// Print some debug info
+			isGameOver = true;
+			endPopup = std::make_unique<resultPopup>(true, targetWord);
+			std::cout << "ai castigat!" << std::endl;
 
 		}
+		else currentRowIdx++;
+
+		// Print some debug info
+
 	}
 	else if (event.key.code == sf::Keyboard::Escape) {
 		renderEngine::sharedInstance().signalExit();

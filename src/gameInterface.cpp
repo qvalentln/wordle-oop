@@ -196,7 +196,7 @@ void Button::draw(sf::RenderWindow& window) const {
 
 // mainMenu
 
-mainMenu::mainMenu() {
+mainMenu::mainMenu() : AppState() {
 
 	gameTitle.setFont(FontManager::sharedInstance().font());
 	gameTitle.setString("miniWordle");
@@ -228,11 +228,6 @@ void mainMenu::update(sf::RenderWindow& window) {
 	}
 }
 
-mainMenu & mainMenu::sharedInstance() {
-	static mainMenu menu;
-	return menu;
-
-}
 
 
 

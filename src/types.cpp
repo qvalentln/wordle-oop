@@ -2,6 +2,8 @@
 #include <gameEngine.h>
 #include <gameInterface.h>
 
+gameState::gameState() : AppState(), requestMenu(false) {}
+
 std::unique_ptr<AppState> gameState::handleEvent(const sf::Event &event) {
 
 	std::string engineSignal = wordleEngine::sharedInstance().handleEvent(event);

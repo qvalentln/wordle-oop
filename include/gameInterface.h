@@ -34,6 +34,8 @@ private:
 	std::vector<std::unique_ptr<Button> > buttons;
 public:
 	resultPopup(bool hasWon, const std::string& targetWord);
+	resultPopup(const resultPopup& other) = delete;
+	resultPopup& operator=(const resultPopup& other) = delete;
 
 	std::string handleEvent(const sf::Event& event, sf::RenderWindow& window);
 	void update(sf::RenderWindow& window);
@@ -51,7 +53,10 @@ public:
 
 	mainMenu();
 
-	static mainMenu& sharedInstance();
+	mainMenu(const mainMenu& other) = delete;
+	mainMenu& operator=(const mainMenu& other) = delete;
+
+
 
 	std::unique_ptr<AppState> handleEvent(const sf::Event& event);
 	void update(sf::RenderWindow& window);
