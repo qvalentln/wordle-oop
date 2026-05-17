@@ -38,7 +38,7 @@ resultPopup::resultPopup(bool hasWon, const std::string& targetWord) {
 
 
 	buttons.push_back(std::make_unique<Button>(sf::Vector2f(210.f, 320.f), sf::Vector2f(160.f, 45.f), "RESTART"));
-	buttons.push_back(std::make_unique<Button>(sf::Vector2f(430.f, 320.f), sf::Vector2f(160.f, 45.f), "EXIT"));
+	buttons.push_back(std::make_unique<Button>(sf::Vector2f(430.f, 320.f), sf::Vector2f(160.f, 45.f), "MENU"));
 
 
 
@@ -201,7 +201,7 @@ mainMenu::mainMenu() : AppState() {
 	gameTitle.setFont(FontManager::sharedInstance().font());
 	gameTitle.setString("miniWordle");
 	gameTitle.setCharacterSize(60);
-	gameTitle.setFillColor(sf::Color::Magenta);
+	gameTitle.setFillColor(sf::Color::Green);
 	gameTitle.setStyle(sf::Text::Bold);
 
 	const sf::FloatRect titleRect = gameTitle.getLocalBounds();
