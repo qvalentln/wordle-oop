@@ -1,4 +1,5 @@
 #include <gameInterface.h>
+#include <gameEngine.h>
 #include <resman.h>
 
 
@@ -43,20 +44,20 @@ resultPopup::resultPopup(bool hasWon, const std::string& targetWord) {
 
 }
 
-void resultPopup::handleEvent(const sf::Event &event, sf::RenderWindow &window, appState &currentAppState,
-	bool &shouldResetGame) {
+std::string resultPopup::handleEvent(const sf::Event &event, sf::RenderWindow &window) {
 
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
 		sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
 		sf::Vector2f mousePos = window.mapPixelToCoords(pixelPos);
 
 		if (buttons[0]->isClicked(mousePos)) {
-			shouldResetGame = true;
+			return "RESTART";
 		}
 		else if (buttons[1]->isClicked(mousePos)) {
-			currentAppState = appState::MENU;
+			return "MENU";
 		}
 	}
+	return "";
 
 }
 
@@ -217,8 +218,11 @@ mainMenu::mainMenu() {
 
 // hover logic
 void mainMenu::update(sf::RenderWindow& window) {
+
+	window.setView(renderEngine::sharedInstance().getGameView());
+
 	sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
-	sf::Vector2f mousePos = window.mapPixelToCoords(pixelPos);
+	sf::Vector2f mousePos = window.mapPixelToCoords(pixelPos, renderEngine::sharedInstance().getGameView());
 	for (auto &bttn : buttons) {
 		bttn->updateHover(mousePos);
 	}
@@ -232,7 +236,9 @@ mainMenu & mainMenu::sharedInstance() {
 
 
 
-void mainMenu::handleEvent(const sf::Event& event, sf::RenderWindow& window, appState& currentAppState) {
+std::unique_ptr<AppState> mainMenu::handleEvent(const sf::Event& event) {
+	auto& window = renderEngine::sharedInstance().getWindow();
+
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
 		sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
 		sf::Vector2f mousePos = window.mapPixelToCoords(pixelPos);
@@ -254,7 +260,7 @@ void mainMenu::handleEvent(const sf::Event& event, sf::RenderWindow& window, app
 			wordleEngine::sharedInstance().initGame(difficulty);
 
 
-			currentAppState = appState::GAME;
+			return std::make_unique<gameState>();
 		}
 		else if (buttons[1]->isClicked(mousePos)) {
 			int count = buttons[1]->getClickCount();
@@ -267,19 +273,25 @@ void mainMenu::handleEvent(const sf::Event& event, sf::RenderWindow& window, app
 			if (count % 3 == 2) {
 				buttons[1]->updateLabel("DIFFICULTY: IMPOSSIBLE");
 			}
+			return nullptr;
 		}
 		else if (buttons[2]->isClicked(mousePos)) {
 			// iesi
-			currentAppState = appState::EXIT;
+			window.close();
+			return nullptr;
 		}
 	}
+	return nullptr;
 }
+void mainMenu::render(sf::RenderWindow &window){
+	window.setView(renderEngine::sharedInstance().getGameView());
+	window.clear(sf::Color::White);
 
-void mainMenu::draw(sf::RenderWindow &window) const {
 	window.draw(gameTitle);
 	for (auto& bttn : buttons) {
 		bttn->draw(window);
 	}
+	window.display();
 
 }
 

@@ -3,6 +3,7 @@
 
 #include "env_fixes.h"
 #include <gameEngine.h> // Core game logic
+#include <gameInterface.h>
 
 #include <chrono>
 #include <thread>
@@ -37,50 +38,33 @@ int main() {
      */
     auto& renderState = renderEngine::sharedInstance();
     auto& window = renderEngine::sharedInstance().getWindow();
-    auto& gameState = wordleEngine::sharedInstance();
 
-    auto& menu= mainMenu::sharedInstance();
-
-    appState state = appState::MENU;
-
-
-    while(window.isOpen() && state != appState::EXIT && !renderState.shouldExit()) {
+    std::unique_ptr<AppState> currentState = std::make_unique<mainMenu>();
+    while(window.isOpen() && !renderState.shouldExit()) {
 
         sf::Event event{};
         while(window.pollEvent(event)) {
-
-            if (state == appState::MENU) {
-                menu.handleEvent(event,window,state);
-                if (event.type == sf::Event::Closed) {
-                    window.close();
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+            if (currentState) {
+                auto nextState = currentState->handleEvent(event);
+                if (nextState) {
+                    currentState = std::move(nextState);
                 }
             }
-            else if (state == appState::GAME) {
-                gameState.handleEvent(event, state);
-            }
         }
-
-        if (state == appState::MENU) {
-            menu.update(window);
+        if (currentState) {
+            currentState->update(window);
         }
-
-        if (renderEngine::sharedInstance().shouldExit()) {
+        if (renderState.shouldExit()) {
             window.close();
         }
-
         using namespace std::chrono_literals;
         std::this_thread::sleep_for(300ms);
-
         //draw logic
-        window.clear(sf::Color::White);
-
-        if (state == appState::MENU) {
-            window.setView(renderEngine::sharedInstance().getGameView());
-            menu.draw(window);
-            window.display();
-        }
-        else if (state == appState::GAME) {
-            gameState.renderState();
+        if (currentState) {
+            currentState->render(window);
         }
     }
 

@@ -158,6 +158,7 @@ add_executable(${PROJECT_NAME}
         include/gameInterface.h
         src/gameInterface.cpp
         include/types.h
+        src/types.cpp
 )
 
 include(cmake/CompilerFlags.cmake)

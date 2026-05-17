@@ -49,7 +49,7 @@ Nerespectarea duce la nepunctarea proiectului
   - ilustrați propagarea excepțiilor
   - ilustrati upcasting-ul în blocurile catch
   - minim folosit într-un loc în care tratarea erorilor în modurile clasice este mai dificilă
-- [ ] folosirea unei clase abstracte [(0.25p)](https://github.com/Ionnier/poo/tree/main/labs/L04#clase-abstracte)
+- [X] folosirea unei clase abstracte [(0.25p)](https://github.com/Ionnier/poo/tree/main/labs/L04#clase-abstracte)
  - [X] clase template
    - [X] crearea unei clase template [(1p)](https://github.com/Ionnier/poo/tree/main/labs/L08)
    - [X] 2 instanțieri ale acestei clase (0.5p)
@@ -57,7 +57,7 @@ Nerespectarea duce la nepunctarea proiectului
    - [X] utilizarea a două structuri (containere) diferite (vector, list sau orice alt container care e mai mult sau mai putin un array)
    - [X] utilizarea a unui algoritm cu funcție lambda (de exemplu, sort, transform)
  - Design Patterns [(0.75p)](https://github.com/Ionnier/poo/tree/main/labs/L08)
-   - [ ] utilizarea a două șabloane de proiectare
+   - [X] utilizarea a două șabloane de proiectare
 
 ### Observații
 

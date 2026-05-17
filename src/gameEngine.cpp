@@ -1,4 +1,5 @@
 #include <gameEngine.h>
+#include <gameInterface.h>
 
 
 // This will initialize the game window
@@ -164,31 +165,25 @@ void wordleEngine::handleKeyPress(const sf::Event &event) {
 
 
 
-void wordleEngine::handleEvent(const sf::Event& event, appState& gameState) {
+std::string wordleEngine::handleEvent(const sf::Event& event) {
 	auto& window = renderEngine::sharedInstance().getWindow();
+
 	if (isGameOver && endPopup) {
 		bool shouldReset = false;
 		auto* popup = dynamic_cast<resultPopup*>(endPopup.get());
 		if (popup) {
-			popup->handleEvent(event,window,gameState,shouldReset);
+			std::string action = popup->handleEvent(event,window);
+			if (action == "RESTART") {
+				gameDifficulty difficulty = getGameDifficulty();
+				initGame(difficulty);
+				return "";
+			}
+			else if (action == "MENU") {
+				return "MENU";
+			}
 		}
+		return "";
 
-		if (shouldReset) {
-			gameDifficulty currDiff = getGameDifficulty();
-			initGame(currDiff);
-		}
-		return;
-	}
-
-	if (isGameOver){
-		if (event.type == sf::Event::Closed) {
-			window.close();
-			renderEngine::sharedInstance().signalExit();
-		}
-		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-			renderEngine::sharedInstance().signalExit();
-		}
-		return;
 	}
 
 	switch (event.type) {
@@ -230,6 +225,8 @@ void wordleEngine::handleEvent(const sf::Event& event, appState& gameState) {
 		default:
 			break;
 	}
+
+	return "";
 }
 
 
@@ -305,6 +302,17 @@ void wordleEngine::renderState() const {
 	}
 
 	window.display();
+
+}
+
+void wordleEngine::updatePopup(sf::RenderWindow &window) {
+	if (isGameOver && endPopup) {
+		auto* popup = dynamic_cast<resultPopup*>(endPopup.get());
+		if (popup) {
+			popup->update(window);
+		}
+	}
+
 
 }
 

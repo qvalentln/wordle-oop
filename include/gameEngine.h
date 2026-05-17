@@ -6,7 +6,6 @@
 
 #include <wordle.h>
 #include <types.h>
-#include <gameInterface.h>
 #include <decrypt.h>
 #include <memory>
 
@@ -74,11 +73,12 @@ public:
 	bool isFinished() const { return isGameOver; }
 
 	void initGame(gameDifficulty &difficulty);
-	void handleEvent(const sf::Event& event, appState& gameState);
 	void handleKeyPress(const sf::Event& event);
 	static void validateRow(WordRow& row, const std::string& target);
-	gameDifficulty getGameDifficulty() const;
 	void renderState() const;
+	void updatePopup(sf::RenderWindow& window);
+	std::string handleEvent(const sf::Event& event);
+	gameDifficulty getGameDifficulty() const;
 
 	friend std::ostream& operator<<(std::ostream& os, const wordleEngine& self);
 	friend void wordleDebugInfo();

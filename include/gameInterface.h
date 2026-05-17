@@ -5,8 +5,6 @@
 #include <SFML/Graphics.hpp>
 #include <wordle.h> // baseEntity
 #include <types.h>
-#include <gameEngine.h>
-
 
 
 class Button {
@@ -37,29 +35,27 @@ private:
 public:
 	resultPopup(bool hasWon, const std::string& targetWord);
 
-	void handleEvent(const sf::Event& event, sf::RenderWindow& window,
-					appState& currentAppState, bool& shouldResetGame);
+	std::string handleEvent(const sf::Event& event, sf::RenderWindow& window);
 	void update(sf::RenderWindow& window);
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 };
 
-class mainMenu {
+class mainMenu : public AppState {
 private:
 	sf::Text gameTitle;
 	std::vector<std::unique_ptr<Button>> buttons;
-	mainMenu();
 
 public:
-	mainMenu(const mainMenu&) = delete;
-	mainMenu& operator=(const mainMenu&) = delete;
+
+	mainMenu();
 
 	static mainMenu& sharedInstance();
 
-	void handleEvent(const sf::Event& event, sf::RenderWindow& window, appState& currentAppState);
+	std::unique_ptr<AppState> handleEvent(const sf::Event& event);
 	void update(sf::RenderWindow& window);
-	void draw(sf::RenderWindow& window) const;
+	void render(sf::RenderWindow& window);
 };
 
 #endif //OOP_GAMEINTERFACE_H
