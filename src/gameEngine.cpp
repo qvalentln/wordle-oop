@@ -6,12 +6,8 @@
 // This will initialize the game window
 // Tine de randare
 
-
-
-
 renderEngine::renderEngine () : desktop(sf::VideoMode::getDesktopMode()), keepOpen(true) {
 
-	//DisplayManager::syncResolution(window, gameView);
 	window.create(desktop, "miniWordle", sf::Style::Fullscreen);
 
 	/// This is needed so we do not burn the GPU
@@ -19,8 +15,6 @@ renderEngine::renderEngine () : desktop(sf::VideoMode::getDesktopMode()), keepOp
 
 	gameView = DisplayManager::computeLetterbox(window.getSize(), vWidth, vHeight);
 	window.setView(gameView);
-
-
 }
 
 sf::RenderWindow & renderEngine::getWindow() {
@@ -38,11 +32,6 @@ void renderEngine::resize(const sf::Event& event) {
 }
 
 
-
-// Wordle Engine
-
-
-
 std::ostream& operator<<(std::ostream &os, const wordleEngine &self) {
 
 	os << self.currentRowIdx << std::endl;
@@ -54,6 +43,7 @@ void wordleDebugInfo() {
 	std::cout << wordleEngine::sharedInstance().currentRowIdx << std::endl;
 }
 
+// Wordle Engine
 
 wordleEngine::wordleEngine() : currentRowIdx(0), rowCount(6), showAlphabet(true), isGameOver(false), targetWord("MACOS")  {
 	// dummy values, initGame does all the work
@@ -121,11 +111,7 @@ void wordleEngine::initGame(gameDifficulty &difficulty) {
 
 }
 
-
-
 // Tine de logica jocului
-
-
 
 void wordleEngine::handleKeyPress(const sf::Event &event) {
 
@@ -162,8 +148,6 @@ void wordleEngine::handleKeyPress(const sf::Event &event) {
 
 		}
 		else currentRowIdx++;
-
-		// Print some debug info
 
 	}
 	else if (event.key.code == sf::Keyboard::Escape) {

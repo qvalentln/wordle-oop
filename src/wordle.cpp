@@ -5,9 +5,6 @@
 #include<wordle.h>
 #include<string>
 
-
-
-
 LetterTile::LetterTile(const sf::Vector2f& pos, const sf::Color& color, float size, float thickness, char letter):
 status(TileStatus::EMPTY), borderThickness(thickness) {
 
@@ -85,15 +82,12 @@ void LetterTile::setStatus(const TileStatus& s) {
 		case TileStatus::CORRECT:
 			box.setFillColor(sf::Color(83,141,78));
 			break;
-		default:
+		default: //dummy case
 			box.setFillColor(sf::Color::Red);
 
 	}
 	box.setOutlineThickness(borderThickness);
 }
-
-
-
 
 
 void LetterTile::draw(sf::RenderTarget& target, const sf::RenderStates states) const {

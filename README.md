@@ -1,5 +1,39 @@
 # miniWordle
 
+<h4> Implementare offline a Wordle.</h4>
+
+<h3>Descriere</h3>
+Varianta implementata a jocului permite 3 nivele de dificultate (*Normal* - 6 incercari, *Hard* - 3 incercari, *IMPOSIBIL* - o singura incercare). 
+
+Observa faptul ca *IMPOSIBIL* chiar inseamna *IMPOSIBIL* - poti bate nivelul decat daca ai prea mult "bulan" sau daca esti cu un pas in fata algoritmului de randomizare.
+
+De asemenea, alfabetul (starea literelor - POZ CORECTA, POZ GRESITA, GRESIT, care este cel englez) nu apare in aceasta dificultate.
+
+<h3>Safeguards</h3>
+Ca safeguards, ne am asigurat de urmatoarele lucruri:
+
+- _dictionarul_ (fisierul care contine cuvintele) este criptat folosind o cheie XOR, hardcodata in fisierul jocului.
+- La schimbarea rezolutiei (manual, din setari, in caz ca cineva chiar se gandeste la asta), elementele grafice isi pastreaza structura (nu vor aparea probleme stretch/compress). 
+- In acest sens, toata grafica jocului este gandita si conceputa pe un letterbox de dimensiune 800x600. Oricum, alte rezolutii mai mici (ex. 640x480) duc in cazuri extreme ce depasesc scopul acestui proiect. 
+- In gameplay, in timpul jocului, fiecare cuvant dat este trecut prin dictionar. Daca nu apare in dictionar, consideram cuvantul "invalid". 
+
+Acest lucru face imposibil inputurile de tipul HHHHH care ar putea da hint-uri "aiurea" despre starea literei in cuvant.
+
+<h3>Interactiunea</h3>
+Dificultatea jocului se poate alege din meniu. La finalul jocului, vei primi un popup de tipul AI CASTIGAT / AI PIERDUT, cu posibilitatea de a da restart (cu aceeasi dificultate) sau iesire in menu (eventual, schimband dificultatea).
+
+<h3> What's next? </h3>
+Chiar daca proiectul nu isi va atinge obiectivele sale maxime, in continuare apar lucruri interesante de implementat:
+
+- adaugarea unui log (cu toate cuvintele ghicite - dificultatea in care a fost dat, precum si nr de incercari pentru a-l ghici)
+- adaugarea unui Dark/Light Theme toggler.
+- extinderea dictionarului (+ cuvinte din limba romana? Integrare LLM? - in sensul de generare de cuvinte, insa ar putea face dificila verificarea inputului)
+
+
+
+
+
+
 ## Cerințe obligatorii 
 
 Nerespectarea duce la nepunctarea proiectului
