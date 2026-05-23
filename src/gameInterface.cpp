@@ -120,9 +120,9 @@ Button::Button(sf::Vector2f position, sf::Vector2f size, const std::string& labe
 
 	float scale = std::min(scaleX, scaleY);
 
-	if (scale > 1.f) {
-		scale = 1.f;
-	}
+
+	scale = std::min(scale, 1.f);
+
 	text.setScale(scale,scale);
 	text.setPosition(position.x + size.x / 2.f, position.y + size.y / 2.f);
 }

@@ -37,8 +37,6 @@ private:
 
 public:
 
-
-
     LetterTile(const sf::Vector2f& pos, const sf::Color& color, float size, float thickness, char letter=' ');
     LetterTile(const LetterTile& other);
     LetterTile& operator=(const LetterTile& other);

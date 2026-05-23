@@ -30,7 +30,8 @@ Chiar daca proiectul nu isi va atinge obiectivele sale maxime, in continuare apa
 - extinderea dictionarului (+ cuvinte din limba romana? Integrare LLM? - in sensul de generare de cuvinte, insa ar putea face dificila verificarea inputului)
 
 
-
+gameplay demo - diff imposibil
+<img src="https://i.ibb.co/vxvsqc2P/2026-05-2321-41-37online-video-cutter-com-ezgif-com-optimize.gif" alt="impossible gameplay"></img>
 
 
 

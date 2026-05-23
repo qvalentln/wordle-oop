@@ -1,5 +1,5 @@
 // SFML 2.6.1
-#include <SFML/Graphics.hpp> // face urat daca nu il bag primul
+#include <SFML/Graphics.hpp>
 
 #include "env_fixes.h"
 #include <gameEngine.h> // Core game logic

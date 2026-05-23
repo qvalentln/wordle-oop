@@ -33,8 +33,9 @@ std::string ResourceManager::getPathTo(const ResourceType type, const std::strin
 sf::View DisplayManager::computeLetterbox(const sf::Vector2u& windowSize, float virtualWidth, float virtualHeight) {
     auto windowWidth = static_cast<float>(windowSize.x);
     auto windowHeight = static_cast<float>(windowSize.y);
-    const float windowRatio = windowWidth / windowHeight;
-    const float viewRatio = virtualWidth / virtualHeight;
+
+    const float windowRatio = windowWidth / windowHeight;    // current aspect ratio
+    const float viewRatio = virtualWidth / virtualHeight;    // 4/3
 
     float sizeX = 1.f, sizeY = 1.f;
     float posX = 0.f, posY = 0.f;
